@@ -6,6 +6,9 @@ variable "homelab_domain" {
   type    = string
   default = "homelab.local"
 }
+variable "proxmox_gateway" {
+  type = string
+}
 
 # ssh
 variable "ssh_key_path" {
@@ -92,4 +95,31 @@ variable "containers_definition" {
     memory_dedicated = number
     tags             = list(string)
   }))
+}
+
+# k8s custers
+variable "k8s_cluster_tags" {
+  type    = list(string)
+  default = ["terraform", "k8s"]
+}
+variable "k8s_cluster_definition" {
+  type = list(object({
+    vm_id            = number
+    type             = string
+    cpu_cores        = number
+    cpu_limit        = number
+    cpu_units        = number
+    memory_dedicated = number
+    hostname         = string
+    ip_address       = string
+    startup = object({
+      order      = number
+      up_delay   = number
+      down_delay = number
+    })
+  }))
+  validation {
+    condition     = alltrue([for spec in var.k8s_cluster_definition : contains(["manager", "worker"], spec.type)])
+    error_message = "Each k8s_cluster_specs type must be 'manager' or 'worker'."
+  }
 }
