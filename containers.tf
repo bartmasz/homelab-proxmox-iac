@@ -17,7 +17,7 @@ resource "proxmox_virtual_environment_container" "container" {
   initialization {
     hostname = each.value.hostname
     user_account {
-      keys = [file(var.vm_template_cloud_init_ssh_key_path)]
+      keys = [file(var.ssh_key_path)]
     }
     ip_config {
       ipv4 {
