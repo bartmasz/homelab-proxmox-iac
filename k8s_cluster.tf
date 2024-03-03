@@ -1,41 +1,43 @@
 
 resource "proxmox_virtual_environment_vm" "k8s_vm" {
-  count     = length(var.k8s_cluster_definition)
+  for_each = { for vm in var.k8s_cluster_definition :
+    "${vm.vm_id}-${vm.hostname}" => vm
+  }
   node_name = var.proxmox_node
-  vm_id     = var.k8s_cluster_definition[count.index].vm_id
-  name      = var.k8s_cluster_definition[count.index].hostname
-  tags      = concat(var.k8s_cluster_tags, [var.k8s_cluster_definition[count.index].type])
+  vm_id     = each.value.vm_id
+  name      = each.value.hostname
+  tags      = concat(var.k8s_cluster_tags, [each.value.type])
 
   started = true
   on_boot = true
   startup {
-    order      = var.k8s_cluster_definition[count.index].startup.order
-    up_delay   = var.k8s_cluster_definition[count.index].startup.up_delay
-    down_delay = var.k8s_cluster_definition[count.index].startup.down_delay
+    order      = each.value.startup.order
+    up_delay   = each.value.startup.up_delay
+    down_delay = each.value.startup.down_delay
   }
 
   clone {
     vm_id   = var.vm_template_id
-    retries = 3
+    retries = 1
   }
 
   boot_order = ["scsi0"]
 
   memory {
-    dedicated = var.k8s_cluster_definition[count.index].memory_dedicated
+    dedicated = each.value.memory_dedicated
   }
 
   cpu {
     type  = "host"
-    cores = var.k8s_cluster_definition[count.index].cpu_cores
-    limit = var.k8s_cluster_definition[count.index].cpu_limit
-    units = var.k8s_cluster_definition[count.index].cpu_units
+    cores = each.value.cpu_cores
+    limit = each.value.cpu_limit
+    units = each.value.cpu_units
   }
 
   initialization {
     ip_config {
       ipv4 {
-        address = var.k8s_cluster_definition[count.index].ip_address
+        address = each.value.ipv4_address
         gateway = var.proxmox_gateway
       }
     }

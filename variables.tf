@@ -111,7 +111,7 @@ variable "k8s_cluster_definition" {
     cpu_units        = number
     memory_dedicated = number
     hostname         = string
-    ip_address       = string
+    ipv4_address     = string
     startup = object({
       order      = number
       up_delay   = number
