@@ -35,7 +35,8 @@ variable "containers_definition" {
       volume = string
       path   = string
     }))
-    mac_address      = string
+    ipv4_address     = string
+    gateway          = string
     dns_servers      = list(string)
     cpu_cores        = number
     memory_dedicated = number

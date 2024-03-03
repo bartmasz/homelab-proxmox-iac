@@ -21,7 +21,8 @@ resource "proxmox_virtual_environment_container" "container" {
     }
     ip_config {
       ipv4 {
-        address = "dhcp"
+        address = each.value.ipv4_address
+        gateway = each.value.gateway
       }
     }
     dns {
@@ -52,9 +53,8 @@ resource "proxmox_virtual_environment_container" "container" {
   }
 
   network_interface {
-    name        = "eth0"
-    mac_address = each.value.mac_address
-    firewall    = true
+    name     = "eth0"
+    firewall = true
   }
   console {
     enabled = true
