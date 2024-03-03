@@ -49,6 +49,7 @@ resource "proxmox_virtual_environment_container" "container" {
     content {
       volume = mount_point.value.volume
       path   = mount_point.value.path
+      size   = mount_point.value.size
     }
   }
 

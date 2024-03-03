@@ -34,6 +34,7 @@ variable "containers_definition" {
     mount_points = list(object({
       volume = string
       path   = string
+      size   = string
     }))
     ipv4_address     = string
     gateway          = string
