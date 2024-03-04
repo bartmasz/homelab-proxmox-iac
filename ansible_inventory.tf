@@ -7,6 +7,9 @@ resource "local_file" "ansible_inventory" {
     "${path.module}/ansible_inventory.tpl",
     {
       containers = local.container_details
+      vm_user    = var.vm_template_cloud_init_username
+      managers   = local.manager_details
+      workers    = local.worker_details
     }
   )
 }
