@@ -34,6 +34,11 @@ resource "proxmox_virtual_environment_vm" "k8s_vm" {
     units = each.value.cpu_units
   }
 
+  network_device {
+    bridge  = "vmbr0"
+    enabled = true
+  }
+
   initialization {
     ip_config {
       ipv4 {
