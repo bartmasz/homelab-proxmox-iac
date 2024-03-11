@@ -9,6 +9,14 @@ resource "proxmox_virtual_environment_container" "container" {
   description  = each.value.description
   tags         = each.value.tags
 
+  started       = true
+  start_on_boot = true
+  startup {
+    order      = each.value.startup.order
+    up_delay   = each.value.startup.up_delay
+    down_delay = each.value.startup.down_delay
+  }
+
   operating_system {
     template_file_id = proxmox_virtual_environment_download_file.debian_container_template.id
     type             = "debian"

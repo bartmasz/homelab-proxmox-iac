@@ -94,6 +94,11 @@ variable "containers_definition" {
     cpu_cores        = number
     memory_dedicated = number
     tags             = list(string)
+    startup = object({
+      order      = number
+      up_delay   = number
+      down_delay = number
+    })
   }))
 }
 
